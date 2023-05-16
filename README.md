@@ -8,3 +8,5 @@ La documentation pour STM32 est disponible ici : https://www.keil.com/pack/doc/C
 Pinout pour le bandeau LEDs :</br>
 - PA5 System Clock</br>
 - PA7 MOSI
+
+Pour éteindre une LED, il faut mettre l'intensité et la couleur à 0

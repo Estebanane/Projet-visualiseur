@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Visualiseur_Musicale</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tempsDebutMusique">0.00</string>
+    <string name="tempsFinMusique">0.00</string>
+</resources>

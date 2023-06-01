@@ -849,7 +849,7 @@
 
 // <e> SPI1 (Serial Peripheral Interface 1) [Driver_SPI1]
 // <i> Configuration settings for Driver_SPI1 in component ::CMSIS Driver:SPI
-#define RTE_SPI1                        1
+#define RTE_SPI1                        0
 
 //   <o> SPI1_MISO Pin <0=>Not Used <1=>PA6 <2=>PB4
 #define RTE_SPI1_MISO_PORT_ID           0
@@ -948,7 +948,7 @@
 
 // <e> SPI2 (Serial Peripheral Interface 2) [Driver_SPI2]
 // <i> Configuration settings for Driver_SPI2 in component ::CMSIS Driver:SPI
-#define RTE_SPI2                        0
+#define RTE_SPI2                        1
 
 //   <o> SPI2_MISO Pin <0=>Not Used <1=>PB14 <2=>PC2 <3=>PI2
 #define RTE_SPI2_MISO_PORT_ID           0
@@ -971,7 +971,7 @@
 #endif
 
 //   <o> SPI2_MOSI Pin <0=>Not Used <1=>PB15 <2=>PC3 <3=>PI3
-#define RTE_SPI2_MOSI_PORT_ID           0
+#define RTE_SPI2_MOSI_PORT_ID           1
 #if    (RTE_SPI2_MOSI_PORT_ID == 0)
 #define RTE_SPI2_MOSI                   0
 #elif  (RTE_SPI2_MOSI_PORT_ID == 1)
@@ -991,7 +991,7 @@
 #endif
 
 //   <o> SPI2_SCK Pin <0=>PB10 <1=>PB13 <2=>PI1
-#define RTE_SPI2_SCL_PORT_ID            0
+#define RTE_SPI2_SCL_PORT_ID            1
 #if    (RTE_SPI2_SCL_PORT_ID == 0)
 #define RTE_SPI2_SCL_PORT               GPIOB
 #define RTE_SPI2_SCL_BIT                10

@@ -1,5 +1,6 @@
 --cpu Cortex-M3
 ".\debug\main.o"
+".\debug\led.o"
 ".\debug\glcd_fonts.o"
 ".\debug\glcd_mcbstm32f200.o"
 ".\debug\irq_armv7m.o"

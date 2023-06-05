@@ -105,44 +105,76 @@ LED_spi_thread
 */
 void LED_spi_thread(void *arg)
 {
-	led_color_t red[LED_NUMBER_OF_LEDS_PER_PILE] = {
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 },
-		{ 255, 0, 0, 11 }
+	led_color_t pile0[LED_NUMBER_OF_LEDS_PER_PILE] = {
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 },
+		{ 0, 0, 255, 0 }
 	};
 	
-	led_color_t green[LED_NUMBER_OF_LEDS_PER_PILE] = {
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 },
-		{ 0, 255, 0, 11 }
+	led_color_t pile1[LED_NUMBER_OF_LEDS_PER_PILE] = {
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 },
+		{ 255, 0, 255, 0 }
 	};
 	
-	led_color_t blue[LED_NUMBER_OF_LEDS_PER_PILE] = {
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 },
-		{ 0, 0, 255, 11 }
+	led_color_t pile2[LED_NUMBER_OF_LEDS_PER_PILE] = {
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 },
+		{ 224, 247, 49, 0 }
 	};
+	
+	led_color_t pile3[LED_NUMBER_OF_LEDS_PER_PILE] = {
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 },
+		{ 75, 242, 144, 0 }
+	};
+	
+	led_color_t pile4[LED_NUMBER_OF_LEDS_PER_PILE] = {
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 },
+		{ 201, 4, 10, 0 }
+	};
+	
+	uint8_t pileIndex0 = 0;
+	uint8_t pileIndex1 = 0;
+	uint8_t pileIndex2 = 0;
+	uint8_t pileIndex3 = 0;
+	uint8_t pileIndex4 = 0;
 	
 	// Initialise les drivers SPI pour communiquer avec le bandeau LEDs,
 	// à appeler qu'une seule fois.
@@ -155,16 +187,40 @@ void LED_spi_thread(void *arg)
 	
 	while(1) {
 		LED_start_frame();
-		LED_set_pile_colors(0, red);
-		LED_set_pile_colors(1, green);
-		LED_set_pile_colors(2, blue);
-		LED_set_pile_colors(3, green);
-		LED_set_pile_colors(4, red);
+		LED_set_pile_colors(0, pile0);
+		LED_set_pile_colors(1, pile1);
+		LED_set_pile_colors(2, pile2);
+		LED_set_pile_colors(3, pile3);
+		LED_set_pile_colors(4, pile4);
 		LED_end_frame();
 		LED_send();
 		
-		// Delay de 2000 ticks
-		osThreadFlagsWait(0x02, osFlagsWaitAny, 2000);
+		// Allume une LED à la fois et éteins la pile lorsqu'elle est complète
+		if(pileIndex0 == LED_NUMBER_OF_LEDS_PER_PILE) {
+			// Eteint toutes les LEDs
+			for(pileIndex0 = 0, pileIndex1 = 0, pileIndex2 = 0, pileIndex3 = 0, pileIndex4 = 0;
+						pileIndex0 < LED_NUMBER_OF_LEDS_PER_PILE;
+						++pileIndex0, ++pileIndex1, ++pileIndex2, ++pileIndex3, ++pileIndex4)
+			{
+				pile0[pileIndex0].a = pile1[pileIndex0].a = pile2[pileIndex0].a = pile3[pileIndex0].a = pile4[pileIndex0].a = 0;
+			}
+			pileIndex0 = pileIndex1 = pileIndex2 = pileIndex3 = pileIndex4 = 0;
+		}else {
+			// Allume la LED
+			pile0[pileIndex0].a = 11;
+			pile1[pileIndex1].a = 11;
+			pile2[pileIndex2].a = 11;
+			pile3[pileIndex3].a = 11;
+			pile4[pileIndex4].a = 11;
+			pileIndex0++;
+			pileIndex1++;
+			pileIndex2++;
+			pileIndex3++;
+			pileIndex4++;
+		}
+		
+		// Delay de 1000 ticks
+		osThreadFlagsWait(0x02, osFlagsWaitAny, 150);
 	}
 }
 

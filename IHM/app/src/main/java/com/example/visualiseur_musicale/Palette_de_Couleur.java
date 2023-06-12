@@ -4,6 +4,7 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,9 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,15 +42,22 @@ public class Palette_de_Couleur extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    //Bluetooth
     private View vue;
+/*
+    //Bluetooth
+
     private Button _ActiveBT;
     private Button _ConnectBT;
     private BluetoothAdapter mBluetoothAdapter; // objets pour manipuler le BT
     private BluetoothManager mBluetoothManager;
     private Integer interfaceON = 1; // 4 drapeaux pour valider des étapes
     private Integer interfaceOK = 0;
+    private Integer appareilConnecte = 0;
+    private Integer autorisationConnexion = 1;
+
+    private BluetoothSocket _socket = null;
+    private BluetoothDevice deviceTrouve;
+*/
 
     public Palette_de_Couleur() {
         // Required empty public constructor
@@ -82,59 +93,14 @@ public class Palette_de_Couleur extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        vue = inflater.inflate(R.layout.fragment_palette_de__couleur, container, false);
-
-        _ActiveBT = (Button) vue.findViewById(R.id.BActivationBT);
-        _ConnectBT = (Button) vue.findViewById(R.id.Bconnect);
-
-
-        //Le code ci-dessous permet de tester si l’appareil est doté d’une interface BT
-        BluetoothManager mBluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-// Device doesn't support Bluetooth
-            Toast.makeText(getActivity(), "La machine ne possède pas le Bluetooth",
-                    Toast.LENGTH_SHORT).show();
-            interfaceOK = 0;
-        } else {
-            interfaceOK = 1;
-            Toast.makeText(getActivity(), "interface BT existe",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        _ActiveBT.setOnClickListener(v -> {
-            if (interfaceOK == 1) {
-                if (!mBluetoothAdapter.isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    Log.i("BTT", "1");
-
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        //return;
-                    }
-                    getActivity().startActivityForResult(enableBtIntent, 10);
-
-                    Log.i("BTT", "2");
-                } else {
-                    interfaceON = 1; // le bluetooth est allumé
-                    Toast.makeText(getActivity(), "Bluetooth allumé",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-        });
-
-
 
 
         return vue;
+
     }
 }
+
+
+
+
+

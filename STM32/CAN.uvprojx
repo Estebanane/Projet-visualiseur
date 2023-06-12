@@ -388,6 +388,11 @@
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\led.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -397,6 +402,16 @@
               <FileName>Abstract.txt</FileName>
               <FileType>5</FileType>
               <FilePath>.\Abstract.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Headers</GroupName>
+          <Files>
+            <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\led.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -799,6 +814,11 @@
               <FileType>1</FileType>
               <FilePath>.\main.c</FilePath>
             </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\led.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -808,6 +828,16 @@
               <FileName>Abstract.txt</FileName>
               <FileType>5</FileType>
               <FilePath>.\Abstract.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Headers</GroupName>
+          <Files>
+            <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\led.h</FilePath>
             </File>
           </Files>
         </Group>

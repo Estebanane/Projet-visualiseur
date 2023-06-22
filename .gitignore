@@ -1,2 +1,4 @@
 *.o
 *.d
+
+raspberry-pi-pico/build/

@@ -3,14 +3,17 @@ package com.example.test_lecture_musique;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MusicPlayerActivity extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
     ArrayList<ModelAudio> Liste_Musiques;
     ModelAudio MusiqueActuelle;
     MediaPlayer mediaPlayer = Lecteur_Multimedia.getInstance();
+    Visualizer visualizer = new Visualizer(mediaPlayer.getAudioSessionId());
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,72 @@ public class MusicPlayerActivity extends AppCompatActivity {
         Liste_Musiques = (ArrayList<ModelAudio>) getIntent().getSerializableExtra("LIST");
 
         RessourcesAveclaMusique();
+
+//Récupération fréquence et amplitude de la musique
+
+        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+
+        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+
+                List<Integer> amplitudes = new ArrayList<>();
+
+                // Parcourez le tableau waveform pour accéder à chaque échantillon d'amplitude
+                for (int i = 0; i < waveform.length; i++) {
+                    // La valeur d'amplitude est comprise entre -128 et 127
+                    //-128 pas de musiques ou pas de son
+                    //127 =10
+                    int amplitude = waveform[i];
+
+                    amplitudes.add(amplitude);
+
+                    // Affichage de l'amplitude dans la console
+                    Log.i("BT", "Amplitude: " + amplitude);
+                }
+
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+                // Fréquence
+             int fftSize = fft.length / 2;
+
+                // Parcourez le tableau fft pour accéder à chaque paire de valeurs (partie réelle, partie imaginaire)
+                for (int i = 0; i < fftSize; i++) {
+                    // La partie réelle et la partie imaginaire d'une bande de fréquence
+                    byte real = fft[i * 2];
+                    byte imaginary = fft[i * 2 + 1];
+
+                    // Calculez l'amplitude de la bande de fréquence à partir de la partie réelle et la partie imaginaire
+                    double amplitude = Math.sqrt((real * real) + (imaginary * imaginary));
+
+                    // Affichez l'amplitude dans la console
+                    Log.i("BTT", "Amplitude FFT: " + amplitude);
+                }
+
+
+                for(int i=0;i<fft.length;i+=2) {
+                    byte real = fft[i];
+                    byte imag = fft[i+1];
+                    long magnitudeSquare = real*real + imag*imag;
+                }
+
+            }
+        },Visualizer.getMaxCaptureRate()/2,true,false);
+
+        visualizer.setEnabled(true);
+        //stop le visualiser
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                visualizer.setEnabled(false);
+            }
+        });
+
+
+
+
 
         MusicPlayerActivity.this.runOnUiThread(new Runnable(){
             @Override
@@ -151,8 +222,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
             mediaPlayer.start();
         }
     }
-
-
 
 
     public static String ConvertToMMSS(String duration ){

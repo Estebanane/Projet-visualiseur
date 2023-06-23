@@ -1,42 +1,59 @@
 package com.example.test_lecture_musique;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.test_lecture_musique.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    //Menu
 
-    private DrawerLayout tiroir;
-    private NavigationView vueNav;
-    private ActionBarDrawerToggle toggle;
+    BottomNavigationView bottomNavigationView;
 
-    RecyclerView _recyclerView;
-    TextView _Pas_de_Musiques;
+    public HomeFragment homeFragment = new HomeFragment();
+    public Bluetooth bluetoothFragment = new Bluetooth();
+    Couleurs_LED couleurs_ledFragment = new Couleurs_LED();
 
-    ArrayList<ModelAudio> ListeMusiques = new ArrayList<>();
+    private Bluetooth FragBluetooth;
+    TextView _BT;
 
-    TextView _Musiques;
+    public static  MainActivity MAINACTIVITY;
+/*
+    private void lanceFragment(Fragment fragment) {
+        FragmentManager fm =getSupportFragmentManager();
+        FragmentTransaction ft= fm.beginTransaction();
+        ft.replace(R.id.frame_layout,fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+    }
+    */
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -44,109 +61,57 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MAINACTIVITY = this;
+
+
 /*
-====
-Menu
-====
+=============
+NavigationVue
+=============
 */
-        //Association objet et vue du menu
-        vueNav = (NavigationView) findViewById(R.id.navigationvue);
-        tiroir = (DrawerLayout) findViewById(R.id.drawerLayout);
-        toggle = new ActionBarDrawerToggle(this, tiroir, R.string.open,  R.string.close);
+bottomNavigationView = findViewById(R.id.bottom_navigation);
+getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
 
-        //Pour action sur le menu
-        tiroir.addDrawerListener(toggle);
-        toggle.syncState();
+bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        vueNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-
-            // balayage des rubriques du menu
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {  switch (item.getItemId()) {
-                case R.id.menuItem:
-                    Toast toast = Toast.makeText(getApplicationContext(),  "Home", Toast.LENGTH_SHORT);
-                    toast.show();
-                    break;
-            }
+        switch (item.getItemId()){
+            case R.id.superHome:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
                 return true;
-            }
-        });
-
-
-/*
-====
-Playlist
-====
-*/
-        _recyclerView =findViewById(R.id.recycler_view);
-        _Pas_de_Musiques =findViewById(R.id.Pas_de_Musiques_text);
-
-        if(checkPermission()==false)
-        {
-            requestPermission();
-            return;
+            case R.id.superBluetooth:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,bluetoothFragment).commit();
+                return true;
+            case R.id.superLed:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container,couleurs_ledFragment).commit();
+                return true;
         }
 
-        String[] projection ={
+        return false;
+    }
+});
+
+
+
+    }
+
+//Navigation View
+
+public Cursor cursor  (){
+        int a = 30;
+    String[] projection ={
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.DURATION,
-        };
+    };
 
-        String selection = MediaStore.Audio.Media.IS_MUSIC +"!=0";
+    String selection = MediaStore.Audio.Media.IS_MUSIC +"!=0";
 
-        Cursor curseur = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,null,null);
+    ContentResolver resolver = getContentResolver();
 
-        while (curseur.moveToNext()){
-            ModelAudio Données_des_Musiques = new ModelAudio(curseur.getString(1),curseur.getString(0),curseur.getString(2));
+    return resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,null,null);
+}
 
-            if(new File(Données_des_Musiques.getChemin()).exists())
-            ListeMusiques.add(Données_des_Musiques);
-        }
-
-        if (ListeMusiques.size()==0)
-        {
-            _Pas_de_Musiques.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            //recyclerview
-            _recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            _recyclerView.setAdapter(new MusiqueListeAdapteur(ListeMusiques, getApplicationContext()));
-        }
-
-    }
-
-    boolean checkPermission(){
-        int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if(result== PackageManager.PERMISSION_GRANTED)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-    }
-
-    void requestPermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE))
-        {
-            Toast.makeText(MainActivity.this, "Lire, demande de permission, accepter dans les paramètres", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(_recyclerView!=null){
-            _recyclerView.setAdapter(new MusiqueListeAdapteur(ListeMusiques,getApplicationContext()));
-        }
-    }
 }

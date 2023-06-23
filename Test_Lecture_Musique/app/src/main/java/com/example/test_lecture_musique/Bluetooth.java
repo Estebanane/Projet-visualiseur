@@ -1,12 +1,26 @@
 package com.example.test_lecture_musique;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +28,33 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class Bluetooth extends Fragment {
+
+    private View vue;
+
+
+    private boolean Connecte =false;
+    //Bouton
+
+
+    Button bt_buttonBTConnect;
+
+
+    TextView bt_textviewVMA302;
+    //EditText
+
+
+
+    Set<BluetoothDevice> BTPairedDevices = null;
+    BluetoothDevice BTDevice = null;
+    BluetoothSocket BTSocket = null;
+
+    private OutputStream outputStream=null;
+
+
+    static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+
+    BluetoothAdapter BTAdaptor = null;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,7 +99,73 @@ public class Bluetooth extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        vue = inflater.inflate(R.layout.fragment_bluetooth, container, false);
+//
+        bt_buttonBTConnect = vue.findViewById(R.id.ButtonConnect);
+        bt_textviewVMA302 = vue.findViewById(R.id.TextVMA302);
+
+
+        bt_buttonBTConnect.setOnClickListener(v -> {
+            if (Connecte ==false){
+                BTAdaptor = BluetoothAdapter.getDefaultAdapter();
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+
+                }
+                BTPairedDevices = BTAdaptor.getBondedDevices();
+                for (BluetoothDevice BTDev : BTPairedDevices){
+                    if(BTDev.getName().equals("VMA302-01")){
+                        BTDevice = BTDev;
+
+                        try{
+                            BTSocket = BTDevice.createRfcommSocketToServiceRecord(MY_UUID);
+                            BTSocket.connect();
+                            outputStream=BTSocket.getOutputStream();
+
+                            bt_textviewVMA302.setText("VMA302-01 Connecté");
+                            bt_buttonBTConnect.setText("Se déconnecter");
+                            Connecte=true;
+                            Log.i ("BT", "connecté");
+
+                        }
+                        catch (Exception exp)
+
+                        {
+                            bt_textviewVMA302.setText("VMA302-01 Non Connecté");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                try {
+                    BTSocket.close();
+                    bt_textviewVMA302.setText("VMA302-01  Non Connecté");
+                    bt_buttonBTConnect.setText("Se connecter");
+                    Connecte=false;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_bluetooth, container, false);
+        return vue;
     }
+
+
+    public void write(byte[] bytes)
+    {
+        try {
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }

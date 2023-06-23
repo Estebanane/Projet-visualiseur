@@ -3,6 +3,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+extern uint8_t g_Demo;
+extern uint32_t g_Demo1MS;
+
+extern LedColor pile1[10];
+extern LedColor pile2[10];
+extern LedColor pile3[10];
+extern LedColor pile4[10];
+extern LedColor pile5[10];
+
 LedColor Led::_pileColor[5] = { 
     LedColor(0, 0, 255, 5),
     LedColor(0, 0, 255, 5),
@@ -292,9 +301,73 @@ bool Led::executeCommand(const std::string &command)
                 color,
                 color
             };
+            _pileColor[number] = color;
             setPileColors(number, 10, pile);
         }
-            
+    }else if(command.rfind("DEMO0", 0) == 0) {
+        g_Demo = 0;
+    }else if(command.rfind("DEMO1", 0) == 0) {
+        g_Demo = 1;
+
+        g_Demo1MS = std::stoi(command.substr(6, 8));
+
+        pile1[0] = _pileColor[0];
+        pile1[1] = _pileColor[0];
+        pile1[2] = _pileColor[0];
+        pile1[3] = _pileColor[0];
+        pile1[4] = _pileColor[0];
+        pile1[5] = _pileColor[0];
+        pile1[6] = _pileColor[0];
+        pile1[7] = _pileColor[0];
+        pile1[8] = _pileColor[0];
+        pile1[9] = LED_OFF;
+
+        pile2[0] = _pileColor[1];
+        pile2[1] = _pileColor[1];
+        pile2[2] = _pileColor[1];
+        pile2[3] = _pileColor[1];
+        pile2[4] = _pileColor[1];
+        pile2[5] = _pileColor[1];
+        pile2[6] = _pileColor[1];
+        pile2[7] = LED_OFF;
+        pile2[8] = LED_OFF;
+        pile2[9] = LED_OFF;
+
+        pile3[0] = _pileColor[2];
+        pile3[1] = _pileColor[2];
+        pile3[2] = _pileColor[2];
+        pile3[3] = _pileColor[2];
+        pile3[4] = _pileColor[2];
+        pile3[5] = LED_OFF;
+        pile3[6] = LED_OFF;
+        pile3[7] = LED_OFF;
+        pile3[8] = LED_OFF;
+        pile3[9] = LED_OFF;
+
+        pile4[0] = _pileColor[3];
+        pile4[1] = _pileColor[3];
+        pile4[2] = _pileColor[3];
+        pile4[3] = LED_OFF;
+        pile4[4] = LED_OFF;
+        pile4[5] = LED_OFF;
+        pile4[6] = LED_OFF,
+        pile4[7] = LED_OFF;
+        pile4[8] = LED_OFF;
+        pile4[9] = LED_OFF;
+
+        pile5[0] = _pileColor[4];
+        pile5[1] = LED_OFF;
+        pile5[2] = LED_OFF;
+        pile5[3] = LED_OFF;
+        pile5[4] = LED_OFF;
+        pile5[5] = LED_OFF;
+        pile5[6] = LED_OFF;
+        pile5[7] = LED_OFF;
+        pile5[8] = LED_OFF;
+        pile5[9] = LED_OFF;
+
+    }else if(command.rfind("DEMO2", 0) == 0) {
+        g_Demo = 2;
     }
 
     return true;

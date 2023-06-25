@@ -37,6 +37,75 @@
 
 std::string g_CommandLed;
 
+uint8_t g_Demo = 0;
+
+uint32_t g_Demo1MS = 50;
+
+LedColor pile1[] = {
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF
+};
+
+LedColor pile2[] = {
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF
+};
+
+LedColor pile3[] = {
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF
+};
+
+LedColor pile4[] = {
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF
+};
+
+LedColor pile5[] = {
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF,
+    LED_OFF
+};
+
 // while(1)
 // {
 //     add_alarm_in_us(23, interrupt_1, NULL, false);
@@ -101,71 +170,6 @@ int main()
     Led led(120, SPI_CLK_PIN, SPI_MOSI_PIN, spi0);
     
     int bytesWritten;
-    LedColor pile1[] = {
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_MAGENTA
-    };
-
-    LedColor pile2[] = {
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_MAGENTA
-    };
-
-    LedColor pile3[] = {
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_MAGENTA
-    };
-
-    LedColor pile4[] = {
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_MAGENTA
-    };
-
-    LedColor pile5[] = {
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_OFF,
-        LED_MAGENTA
-    };
-
     
 
     uint32_t flagValue;
@@ -244,15 +248,99 @@ int main()
             multicore_fifo_push_blocking(FLAG_OK);
         }
 
-        repeating_timer_t timer;
-        // Lance un timer qui se répète à un intervale de temps
-        add_repeating_timer_us(100, filtre1_timer, NULL, &timer);
+        // Quand il n'y a pas de démo en cours
+        if(g_Demo == 0) {
+            repeating_timer_t timer;
+            // Lance un timer qui se répète à un intervale de temps
+            add_repeating_timer_us(100, filtre1_timer, NULL, &timer);
+            while(g_CompteurFiltre < 2000);     // Attend qu'il y ai eu 2000 acquisitions
+            cancel_repeating_timer(&timer);     // Stop le timer
+            g_CompteurFiltre = 0;
+            printf("Valeur filtre: %f\n", g_SortieMax);
 
-        while(g_CompteurFiltre < 2000);     // Attend qu'il y ai eu 1000 acquisitions
-        cancel_repeating_timer(&timer);     // Stop le timer
-        g_CompteurFiltre = 0;
-        printf("Valeur filtre: %f\n", g_SortieMax);
-        g_SortieMax = 0.0f;
+            numberOfLedsToShow = (g_SortieMax * 10) / 0.5f;
+
+            Led::turnLedOn(pile1, 0, 10, numberOfLedsToShow);
+
+            led.startFrame();
+            led.setPileColors(0, 10, pile1);
+            led.endFrame();
+            led.send();
+
+            g_SortieMax = 0.0f;
+        }else if(g_Demo == 1) {
+            int pileIndex;
+            static int pile1Num = 9;
+            static int pile2Num = 7;
+            static int pile3Num = 5;
+            static int pile4Num = 3;
+            static int pile5Num = 1;
+
+            // Pile 1
+            for(pileIndex = 0; pileIndex < pile1Num; ++pileIndex)
+                pile1[pileIndex] = Led::_pileColor[0];
+            for(; pileIndex < 10; ++pileIndex)
+                pile1[pileIndex] = LED_OFF;
+
+            pile1Num++;
+            if(pile1Num >= 11)
+                pile1Num = 0;
+
+            // Pile 2
+            for(pileIndex = 0; pileIndex < pile2Num; ++pileIndex)
+                pile2[pileIndex] = Led::_pileColor[1];
+            for(; pileIndex < 10; ++pileIndex)
+                pile2[pileIndex] = LED_OFF;
+
+            pile2Num++;
+            if(pile2Num >= 11)
+                pile2Num = 0;
+
+            // Pile 3
+            for(pileIndex = 0; pileIndex < pile3Num; ++pileIndex)
+                pile3[pileIndex] = Led::_pileColor[2];
+            for(; pileIndex < 10; ++pileIndex)
+                pile3[pileIndex] = LED_OFF;
+
+            pile3Num++;
+            if(pile3Num >= 11)
+                pile3Num = 0;
+
+            // Pile 4
+            for(pileIndex = 0; pileIndex < pile4Num; ++pileIndex)
+                pile4[pileIndex] = Led::_pileColor[3];
+            for(; pileIndex < 10; ++pileIndex)
+                pile4[pileIndex] = LED_OFF;
+
+            pile4Num++;
+            if(pile4Num >= 11)
+                pile4Num = 0;
+
+            // Pile 5
+            for(pileIndex = 0; pileIndex < pile5Num; ++pileIndex)
+                pile5[pileIndex] = Led::_pileColor[4];
+            for(; pileIndex < 10; ++pileIndex)
+                pile5[pileIndex] = LED_OFF;
+
+            pile5Num++;
+            if(pile5Num >= 11)
+                pile5Num = 0;
+
+            led.startFrame();
+            led.setPileColors(0, 10, pile1);
+            led.setPileColors(1, 10, pile2);
+            led.setPileColors(2, 10, pile3);
+            led.setPileColors(3, 10, pile4);
+            led.setPileColors(4, 10, pile5);
+            led.endFrame();
+            led.send();
+
+            sleep_ms(g_Demo1MS);
+        }else if(g_Demo == 2) {
+
+        }
+
+        
 
         // Récupère la valeur max de l'amplitude sur un nombre d'acquisitions
         //numberOfLedsToShow = get_adc_led_number(10000);

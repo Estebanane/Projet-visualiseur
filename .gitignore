@@ -2,3 +2,6 @@
 *.d
 
 raspberry-pi-pico/build/
+IHM/
+app/
+STM32/

@@ -28,7 +28,7 @@ struct LedColor {
 
 class Led {
 
-    private:
+    public:
         static LedColor _pileColor[5];
 
     private:

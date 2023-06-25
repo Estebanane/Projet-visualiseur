@@ -41,20 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public Bluetooth bluetoothFragment = new Bluetooth();
     Couleurs_LED couleurs_ledFragment = new Couleurs_LED();
 
-    private Bluetooth FragBluetooth;
-    TextView _BT;
-
     public static  MainActivity MAINACTIVITY;
-/*
-    private void lanceFragment(Fragment fragment) {
-        FragmentManager fm =getSupportFragmentManager();
-        FragmentTransaction ft= fm.beginTransaction();
-        ft.replace(R.id.frame_layout,fragment);
-        ft.addToBackStack(null);
-        ft.commit();
-    }
-    */
-
 
     @SuppressLint("SuspiciousIndentation")
     @Override
@@ -64,16 +51,15 @@ public class MainActivity extends AppCompatActivity {
 
         MAINACTIVITY = this;
 
-
 /*
 =============
 NavigationVue
 =============
 */
-bottomNavigationView = findViewById(R.id.bottom_navigation);
-getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
+    bottomNavigationView = findViewById(R.id.bottom_navigation);
+    getSupportFragmentManager().beginTransaction().replace(R.id.container,homeFragment).commit();
 
-bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+    bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 

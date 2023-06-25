@@ -28,6 +28,7 @@ public class Couleurs_LED extends Fragment {
 
     private View vue;
 
+    //Choix de la couleur
     Button button;
     ConstraintLayout constraintLayout;
     int defaultColor;
@@ -36,6 +37,7 @@ public class Couleurs_LED extends Fragment {
     int green;
     int blue;
 
+    //boutton
     Button led_buttonPile1;
     Button led_buttonPile2;
     Button led_buttonPile3;
@@ -44,8 +46,8 @@ public class Couleurs_LED extends Fragment {
     Button led_buttonDemo0;
     Button led_buttonDemo1;
 
+    //Seekbar
     SeekBar led_seekbarIntensite;
-
     SeekBar led_seekbarVitesse;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -163,6 +165,7 @@ public class Couleurs_LED extends Fragment {
         return vue;
     }
 
+//Fonction pour activer la DEMO 0 (filtre) et la DEMO 1 ( vague + ou moins vite)
     public byte[] GetDemoTrame (byte numDemo){
         List<Byte> TableauTrame = new ArrayList<>();
         TableauTrame.add((byte) 'D');

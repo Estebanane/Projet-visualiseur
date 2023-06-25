@@ -64,6 +64,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                 List<Integer> amplitudes = new ArrayList<>();
 
+// Test de Récupération d'amplitude (pas utile pour le projet)
+
+
                 // Parcourez le tableau waveform pour accéder à chaque échantillon d'amplitude
                 for (int i = 0; i < waveform.length; i++) {
                     // La valeur d'amplitude est comprise entre -128 et 127
@@ -83,6 +86,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
             public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
                 // Fréquence
              int fftSize = fft.length / 2;
+
+//Test de récupération de la Fréquence (pas utile pour le projet)
+
 
                 // Parcourez le tableau fft pour accéder à chaque paire de valeurs (partie réelle, partie imaginaire)
                 for (int i = 0; i < fftSize; i++) {
@@ -223,7 +229,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
     }
 
-
+//conversion pour les temps de la musique
     public static String ConvertToMMSS(String duration ){
 
         Long millis = Long.parseLong(duration);

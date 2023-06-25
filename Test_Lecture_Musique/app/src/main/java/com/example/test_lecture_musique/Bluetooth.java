@@ -33,28 +33,22 @@ public class Bluetooth extends Fragment {
 
 
     private boolean Connecte =false;
+
     //Bouton
-
-
     Button bt_buttonBTConnect;
 
-
-    TextView bt_textviewVMA302;
     //EditText
+    TextView bt_textviewVMA302;
 
-
-
+   //Bluetooth
     Set<BluetoothDevice> BTPairedDevices = null;
     BluetoothDevice BTDevice = null;
     BluetoothSocket BTSocket = null;
-
     private OutputStream outputStream=null;
-
-
     static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
-
     BluetoothAdapter BTAdaptor = null;
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,12 +94,13 @@ public class Bluetooth extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         vue = inflater.inflate(R.layout.fragment_bluetooth, container, false);
-//
+
         bt_buttonBTConnect = vue.findViewById(R.id.ButtonConnect);
         bt_textviewVMA302 = vue.findViewById(R.id.TextVMA302);
 
-
+//Boutton Connect
         bt_buttonBTConnect.setOnClickListener(v -> {
             if (Connecte ==false){
                 BTAdaptor = BluetoothAdapter.getDefaultAdapter();
@@ -149,13 +144,11 @@ public class Bluetooth extends Fragment {
             }
         });
 
-
-
         // Inflate the layout for this fragment
         return vue;
     }
 
-
+//Fonction pour envoyer les données pas BT
     public void write(byte[] bytes)
     {
         try {
